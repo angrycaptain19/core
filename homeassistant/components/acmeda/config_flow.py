@@ -44,7 +44,7 @@ class AcmedaFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
         except asyncio.TimeoutError:
             pass
 
-        if len(hubs) == 0:
+        if not hubs:
             return self.async_abort(reason="no_devices_found")
 
         if len(hubs) == 1:

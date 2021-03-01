@@ -156,12 +156,11 @@ async def async_unload_entry(hass, config_entry):
     hass.services.async_remove(DOMAIN, SERVICE_CAPTURE_IMAGE)
     hass.services.async_remove(DOMAIN, SERVICE_TRIGGER_AUTOMATION)
 
-    tasks = []
+    tasks = [
+        hass.config_entries.async_forward_entry_unload(config_entry, platform)
+        for platform in ABODE_PLATFORMS
+    ]
 
-    for platform in ABODE_PLATFORMS:
-        tasks.append(
-            hass.config_entries.async_forward_entry_unload(config_entry, platform)
-        )
 
     await gather(*tasks)
 

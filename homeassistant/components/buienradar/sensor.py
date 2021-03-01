@@ -226,9 +226,11 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
         timeframe,
     )
 
-    dev = []
-    for sensor_type in config[CONF_MONITORED_CONDITIONS]:
-        dev.append(BrSensor(sensor_type, config.get(CONF_NAME), coordinates))
+    dev = [
+        BrSensor(sensor_type, config.get(CONF_NAME), coordinates)
+        for sensor_type in config[CONF_MONITORED_CONDITIONS]
+    ]
+
     async_add_entities(dev)
 
     data = BrData(hass, coordinates, timeframe, dev)
@@ -381,7 +383,7 @@ class BrSensor(Entity):
             self._state = nested.get(self.type[len(PRECIPITATION_FORECAST) + 1 :])
             return True
 
-        if self.type == WINDSPEED or self.type == WINDGUST:
+        if self.type in [WINDSPEED, WINDGUST]:
             # hass wants windspeeds in km/h not m/s, so convert:
             self._state = data.get(self.type)
             if self._state is not None:

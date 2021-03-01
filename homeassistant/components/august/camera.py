@@ -14,10 +14,11 @@ from .entity import AugustEntityMixin
 async def async_setup_entry(hass, config_entry, async_add_entities):
     """Set up August cameras."""
     data = hass.data[DOMAIN][config_entry.entry_id][DATA_AUGUST]
-    devices = []
+    devices = [
+        AugustCamera(data, doorbell, DEFAULT_TIMEOUT)
+        for doorbell in data.doorbells
+    ]
 
-    for doorbell in data.doorbells:
-        devices.append(AugustCamera(data, doorbell, DEFAULT_TIMEOUT))
 
     async_add_entities(devices, True)
 

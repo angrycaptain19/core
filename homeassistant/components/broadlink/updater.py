@@ -151,8 +151,7 @@ class BroadlinkSP2UpdateManager(BroadlinkUpdateManager):
 
     async def async_fetch_data(self):
         """Fetch data from the device."""
-        data = {}
-        data["state"] = await self.device.async_request(self.device.api.check_power)
+        data = {"state": await self.device.async_request(self.device.api.check_power)}
         try:
             data["load_power"] = await self.device.async_request(
                 self.device.api.get_energy

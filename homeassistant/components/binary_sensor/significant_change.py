@@ -14,7 +14,4 @@ def async_check_significant_change(
     **kwargs: Any,
 ) -> Optional[bool]:
     """Test if state significantly changed."""
-    if old_state != new_state:
-        return True
-
-    return False
+    return old_state != new_state

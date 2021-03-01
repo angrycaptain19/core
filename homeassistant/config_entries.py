@@ -471,8 +471,8 @@ class ConfigEntriesFlowManager(data_entry_flow.FlowManager):
         flow = cast(ConfigFlow, flow)
 
         # Remove notification if no other discovery config entries in progress
-        if not any(
-            ent["context"]["source"] in DISCOVERY_SOURCES
+        if all(
+            ent["context"]["source"] not in DISCOVERY_SOURCES
             for ent in self.hass.config_entries.flow.async_progress()
             if ent["flow_id"] != flow.flow_id
         ):
@@ -1081,8 +1081,8 @@ class ConfigFlow(data_entry_flow.FlowHandler):
     ) -> Dict[str, Any]:
         """Abort the config flow."""
         # Remove reauth notification if no reauth flows are in progress
-        if self.source == SOURCE_REAUTH and not any(
-            ent["context"]["source"] == SOURCE_REAUTH
+        if self.source == SOURCE_REAUTH and all(
+            ent["context"]["source"] != SOURCE_REAUTH
             for ent in self.hass.config_entries.flow.async_progress()
             if ent["flow_id"] != self.flow_id
         ):
@@ -1245,9 +1245,10 @@ class EntityRegistryDisabledHandler:
 @callback
 def _handle_entry_updated_filter(event: Event) -> bool:
     """Handle entity registry entry update filter."""
-    if event.data["action"] != "update" or "disabled_by" not in event.data["changes"]:
-        return False
-    return True
+    return (
+        event.data["action"] == "update"
+        and "disabled_by" in event.data["changes"]
+    )
 
 
 async def support_entry_unload(hass: HomeAssistant, domain: str) -> bool:

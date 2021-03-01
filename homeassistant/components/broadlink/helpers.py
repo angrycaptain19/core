@@ -31,7 +31,7 @@ def mac_address(mac):
 
 def format_mac(mac):
     """Format a MAC address."""
-    return ":".join([format(octet, "02x") for octet in mac])
+    return ":".join(format(octet, "02x") for octet in mac)
 
 
 def import_device(hass, host):

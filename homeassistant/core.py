@@ -1610,10 +1610,7 @@ class Config:
         thepath = pathlib.Path(path)
         try:
             # The file path does not have to exist (it's parent should)
-            if thepath.exists():
-                thepath = thepath.resolve()
-            else:
-                thepath = thepath.parent.resolve()
+            thepath = thepath.resolve() if thepath.exists() else thepath.parent.resolve()
         except (FileNotFoundError, RuntimeError, PermissionError):
             return False
 
@@ -1660,11 +1657,11 @@ class Config:
         """Help to set the time zone."""
         time_zone = dt_util.get_time_zone(time_zone_str)
 
-        if time_zone:
-            self.time_zone = time_zone
-            dt_util.set_default_time_zone(time_zone)
-        else:
+        if not time_zone:
             raise ValueError(f"Received invalid time zone {time_zone_str}")
+
+        self.time_zone = time_zone
+        dt_util.set_default_time_zone(time_zone)
 
     @callback
     def _update(

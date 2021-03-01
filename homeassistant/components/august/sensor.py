@@ -60,8 +60,8 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
         batteries["linked_keypad_battery"].append(device)
         operation_sensors.append(device)
 
+    state_provider = SENSOR_TYPES_BATTERY["device_battery"]["state_provider"]
     for device in batteries["device_battery"]:
-        state_provider = SENSOR_TYPES_BATTERY["device_battery"]["state_provider"]
         detail = data.get_device_detail(device.device_id)
         if detail is None or state_provider(detail) is None:
             _LOGGER.debug(

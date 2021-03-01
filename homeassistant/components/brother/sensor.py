@@ -40,8 +40,6 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
     """Add Brother entities from a config_entry."""
     coordinator = hass.data[DOMAIN][DATA_CONFIG_ENTRY][config_entry.entry_id]
 
-    sensors = []
-
     device_info = {
         "identifiers": {(DOMAIN, coordinator.data[ATTR_SERIAL])},
         "name": coordinator.data[ATTR_MODEL],
@@ -50,9 +48,13 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
         "sw_version": coordinator.data.get(ATTR_FIRMWARE),
     }
 
-    for sensor in SENSOR_TYPES:
-        if sensor in coordinator.data:
-            sensors.append(BrotherPrinterSensor(coordinator, sensor, device_info))
+    sensors = [
+        BrotherPrinterSensor(coordinator, sensor, device_info)
+        for sensor in SENSOR_TYPES
+        if sensor in coordinator.data
+    ]
+
+
     async_add_entities(sensors, False)
 
 

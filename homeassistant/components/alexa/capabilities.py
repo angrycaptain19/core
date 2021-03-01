@@ -1527,7 +1527,7 @@ class AlexaRangeController(AlexaCapability):
                 if index == max_value:
                     labels.append(AlexaGlobalCatalog.VALUE_MAXIMUM)
 
-                if len(labels) > 0:
+                if labels:
                     self._resource.add_preset(value=index, labels=labels)
 
             return self._resource.serialize_capability_resources()

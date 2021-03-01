@@ -357,10 +357,7 @@ class BluesoundPlayer(MediaPlayerEntity):
 
             if response.status == HTTP_OK:
                 result = await response.text()
-                if result:
-                    data = xmltodict.parse(result)
-                else:
-                    data = None
+                data = xmltodict.parse(result) if result else None
             elif response.status == 595:
                 _LOGGER.info("Status 595 returned, treating as timeout")
                 raise BluesoundPlayer._TimeoutException()
@@ -689,16 +686,9 @@ class BluesoundPlayer(MediaPlayerEntity):
         if self._status is None or (self.is_grouped and not self.is_master):
             return None
 
-        sources = []
+        sources = [source["title"] for source in self._preset_items]
 
-        for source in self._preset_items:
-            sources.append(source["title"])
-
-        for source in [
-            x
-            for x in self._services_items
-            if x["type"] == "LocalMusic" or x["type"] == "RadioService"
-        ]:
+        for source in [x for x in self._services_items if x["type"] in ["LocalMusic", "RadioService"]]:
             sources.append(source["title"])
 
         for source in self._capture_items:

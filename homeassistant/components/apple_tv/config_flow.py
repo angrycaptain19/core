@@ -351,13 +351,8 @@ class AppleTVConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         return None
 
     def _devices_str(self):
-        return ", ".join(
-            [
-                f"`{atv.name} ({atv.address})`"
-                for atv in self.scan_result
-                if atv.identifier not in self._async_current_ids()
-            ]
-        )
+        return ", ".join(f"`{atv.name} ({atv.address})`" for atv in self.scan_result
+                    if atv.identifier not in self._async_current_ids())
 
     def _prefill_identifier(self):
         # Return identifier (address) of one device that has not been paired with

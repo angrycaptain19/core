@@ -53,9 +53,7 @@ def _is_file(value) -> bool:
 
     if not os.path.isfile(file_in):
         return False
-    if not os.access(file_in, os.R_OK):
-        return False
-    return True
+    return bool(os.access(file_in, os.R_OK))
 
 
 def _get_ip(host):

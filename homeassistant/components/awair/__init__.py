@@ -46,11 +46,10 @@ async def async_setup_entry(hass, config_entry) -> bool:
 
 async def async_unload_entry(hass, config_entry) -> bool:
     """Unload Awair configuration."""
-    tasks = []
-    for platform in PLATFORMS:
-        tasks.append(
-            hass.config_entries.async_forward_entry_unload(config_entry, platform)
-        )
+    tasks = [
+        hass.config_entries.async_forward_entry_unload(config_entry, platform)
+        for platform in PLATFORMS
+    ]
 
     unload_ok = all(await gather(*tasks))
     if unload_ok:

@@ -323,12 +323,10 @@ class WebDavCalendarData:
     def get_end_date(obj):
         """Return the end datetime as determined by dtend or duration."""
         if hasattr(obj, "dtend"):
-            enddate = obj.dtend.value
+            return obj.dtend.value
 
         elif hasattr(obj, "duration"):
-            enddate = obj.dtstart.value + obj.duration.value
+            return obj.dtstart.value + obj.duration.value
 
         else:
-            enddate = obj.dtstart.value + timedelta(days=1)
-
-        return enddate
+            return obj.dtstart.value + timedelta(days=1)

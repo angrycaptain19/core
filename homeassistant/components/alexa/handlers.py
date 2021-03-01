@@ -374,7 +374,6 @@ async def async_api_set_percentage(hass, config, directive, context):
 async def async_api_adjust_percentage(hass, config, directive, context):
     """Process an adjust percentage request."""
     entity = directive.entity
-    percentage_delta = int(directive.payload["percentageDelta"])
     service = None
     data = {ATTR_ENTITY_ID: entity.entity_id}
 
@@ -382,6 +381,7 @@ async def async_api_adjust_percentage(hass, config, directive, context):
         service = fan.SERVICE_SET_PERCENTAGE
         current = entity.attributes.get(fan.ATTR_PERCENTAGE) or 0
 
+        percentage_delta = int(directive.payload["percentageDelta"])
         # set percentage
         percentage = min(100, max(0, percentage_delta + current))
         data[fan.ATTR_PERCENTAGE] = percentage
@@ -850,7 +850,6 @@ async def async_api_set_power_level(hass, config, directive, context):
 async def async_api_adjust_power_level(hass, config, directive, context):
     """Process an AdjustPowerLevel request."""
     entity = directive.entity
-    percentage_delta = int(directive.payload["powerLevelDelta"])
     service = None
     data = {ATTR_ENTITY_ID: entity.entity_id}
 
@@ -858,6 +857,7 @@ async def async_api_adjust_power_level(hass, config, directive, context):
         service = fan.SERVICE_SET_PERCENTAGE
         current = entity.attributes.get(fan.ATTR_PERCENTAGE) or 0
 
+        percentage_delta = int(directive.payload["powerLevelDelta"])
         # set percentage
         percentage = min(100, max(0, percentage_delta + current))
         data[fan.ATTR_PERCENTAGE] = percentage
@@ -1377,8 +1377,7 @@ async def async_api_seek(hass, config, directive, context):
 
     seek_position = int(current_position) + int(position_delta / 1000)
 
-    if seek_position < 0:
-        seek_position = 0
+    seek_position = max(seek_position, 0)
 
     media_duration = entity.attributes.get(media_player.ATTR_MEDIA_DURATION)
     if media_duration and 0 < int(media_duration) < seek_position:

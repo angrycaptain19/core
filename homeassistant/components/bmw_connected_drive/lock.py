@@ -66,10 +66,9 @@ class BMWLock(BMWConnectedDriveBaseEntity, LockEntity):
     def is_locked(self):
         """Return true if lock is locked."""
         if self.door_lock_state_available:
-            result = self._state == STATE_LOCKED
+            return self._state == STATE_LOCKED
         else:
-            result = None
-        return result
+            return None
 
     def lock(self, **kwargs):
         """Lock the car."""
